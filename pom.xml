@@ -1,0 +1,178 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.cloud.bigtable.crawl-corpus</groupId>
+  <artifactId>com.cloud.bigtable.crawl-corpus</artifactId>
+
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>crawl-corpus</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <bigtable.projectID>crawl-corpus-app</bigtable.projectID>
+    <bigtable.clusterID>crawl-corpus</bigtable.clusterID>
+    <bigtable.zone>us-central1-b</bigtable.zone>
+
+    <bigtable.version>0.2.2</bigtable.version>
+
+    <hadoop.version>2.4.1</hadoop.version>
+    <hbase.version>1.1.1</hbase.version>
+
+    <alpn.jdk7.version>7.1.3.v20150130</alpn.jdk7.version>
+    <alpn.jdk8.version>8.1.3.v20150130</alpn.jdk8.version>
+
+    <compileSource>1.8</compileSource>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.cloud.bigtable</groupId>
+      <artifactId>bigtable-hbase-1.1</artifactId>
+      <version>${bigtable.version}</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-client</artifactId>
+        <version>${hbase.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mortbay.jetty.alpn</groupId>
+      <artifactId>alpn-boot</artifactId>
+      <version>${alpn.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>1.0.002</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.facebook.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+      <version>0.20.0</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>4.2.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-core-asl</artifactId>
+      <version>1.9.10</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+      <version>1.9.10</version>
+    </dependency>
+
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>staged</id> 
+      <repositories>
+        <repository>
+          <id>snapshots-repo</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+          <releases><enabled>false</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+    </profile>
+    <profile>
+      <id>jdk7</id>
+        <activation>
+            <jdk>1.7</jdk>
+        </activation>
+        <properties>
+            <alpn.version>${alpn.jdk7.version}</alpn.version>
+        </properties>
+    </profile>
+    <profile>
+        <id>jdk8</id>
+        <activation>
+            <jdk>1.8</jdk>
+        </activation>
+        <properties>
+            <alpn.version>${alpn.jdk8.version}</alpn.version>
+        </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering> 
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+            <source>${compileSource}</source>
+            <target>${compileSource}</target>
+            <showWarnings>true</showWarnings>
+            <showDeprecation>false</showDeprecation>
+            <compilerArgument>-Xlint:-options</compilerArgument>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <descriptorRefs>
+              <!-- This tells Maven to include all dependencies -->
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+                <mainClass>com.example.bigtable.simplecli.HBaseCLI</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

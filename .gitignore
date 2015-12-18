@@ -1,0 +1,9 @@
+.idea
+*.iml
+*.ipr
+*.iws
+/*.zip
+/plugin.xml
+/*.log
+/doc/
+/target/
