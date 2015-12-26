@@ -4,6 +4,8 @@ Christopher 12/15/2015
 
 Read web pages from public common crawl corpus stored in Amazon s3 into Google Cloud Big Table. 
 
+To include REST
+
 Java source file are included in src\main\java\com\cloud
 
 - CrawlCorpus Interface to abstract storage object for crawl-corpus in Google Cloud
